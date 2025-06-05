@@ -1,0 +1,10 @@
+[
+  {
+    "email": "juan@example.com",
+    "funcionId": "f1",
+    "butacas": [
+      7,
+      8
+    ]
+  }
+]

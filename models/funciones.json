@@ -1,0 +1,13 @@
+[
+  {
+    "id": "f1",
+    "pelicula": "Matrix",
+    "fechaHora": "2025-06-04T20:00",
+    "sala": "1",
+    "precio": 10,
+    "ocupadas": [
+      7,
+      8
+    ]
+  }
+]

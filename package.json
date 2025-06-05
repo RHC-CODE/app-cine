@@ -1,0 +1,19 @@
+{
+  "name": "cine",
+  "version": "1.0.0",
+  "description": "CineFlash es una aplicación sencilla desarrollada con **JavaScript** orientada a la gestión de usuarios, funciones de cine y reservas de butacas. Utiliza archivos JSON como base de datos y está estructurada siguiendo principios SOLID y el patrón MVC (Modelo - Vista - Controlador).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.15.1"
+  }
+}

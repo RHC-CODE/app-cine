@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CineFlash </title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .tabs button {
+      flex: 1 1 calc(50% - 10px);
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .tabs button:hover {
+      background-color: #0056b3;
+    }
+
+    .section {
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .submit-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #218838;
+    }
+
+    #resultado {
+      white-space: pre-wrap;
+      background-color: #f8f9fa;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CineFlash - Pruebas API</h1>
+
+    <div class="tabs">
+      <button onclick="mostrar('registro')">Registrar Usuario</button>
+      <button onclick="mostrar('buscar')">Buscar Usuario</button>
+      <button onclick="mostrar('actualizar')">Actualizar Usuario</button>
+      <button onclick="mostrar('eliminar')">Eliminar Usuario</button>
+      <button onclick="mostrar('cartelera')">Ver Cartelera</button>
+    </div>
+
+    <div id="registro" class="section">
+      <h2>Registrar Usuario</h2>
+      <input id="nombre" placeholder="Nombre" />
+      <input id="email" placeholder="Email" />
+      <button class="submit-btn" onclick="registrarUsuario()">Registrar</button>
+    </div>
+
+    <div id="buscar" class="section">
+      <h2>Buscar Usuario</h2>
+      <input id="emailBuscar" placeholder="Email a buscar" />
+      <button class="submit-btn" onclick="obtenerUsuario()">Buscar</button>
+    </div>
+
+    <div id="actualizar" class="section">
+      <h2>Actualizar Usuario</h2>
+      <input id="emailActualizar" placeholder="Email a actualizar" />
+      <input id="nuevoNombre" placeholder="Nuevo nombre" />
+      <button class="submit-btn" onclick="actualizarUsuario()">Actualizar</button>
+    </div>
+
+    <div id="eliminar" class="section">
+      <h2>Eliminar Usuario</h2>
+      <input id="emailEliminar" placeholder="Email a eliminar" />
+      <button class="submit-btn" onclick="eliminarUsuario()">Eliminar</button>
+    </div>
+
+    <div id="cartelera" class="section">
+      <h2>Cartelera de Funciones</h2>
+      <button class="submit-btn" onclick="obtenerCartelera()">Ver Cartelera</button>
+    </div>
+
+    <pre id="resultado"></pre>
+  </div>
+
+  <script>
+    const baseUrl = "/api";
+
+    function mostrar(id) {
+      document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      document.getElementById("resultado").textContent = "Aquí aparecerán las respuestas...";
+    }
+
+    async function registrarUsuario() {
+      const nombre = document.getElementById("nombre").value.trim();
+      const email = document.getElementById("email").value.trim();
+      if (!nombre || !email) {
+        alert("Nombre y email son obligatorios");
+        return;
+      }
+      const res = await fetch(`${baseUrl}/usuarios`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, email }),
+      });
+      const data = await res.json();
+      mostrarResultado(data);
+    }
+
+    async function obtenerUsuario() {
+      const email = document.getElementById("emailBuscar").value.trim();
+      if (!email) {
+        alert("Email es obligatorio");
+        return;
+      }
+      const res = await fetch(`${baseUrl}/usuarios/${email}`);
+      const data = await res.json();
+      mostrarResultado(data);
+    }
+
+    async function actualizarUsuario() {
+      const email = document.getElementById("emailActualizar").value.trim();
+      const nuevoNombre = document.getElementById("nuevoNombre").value.trim();
+      if (!email || !nuevoNombre) {
+        alert("Email y nuevo nombre son obligatorios");
+        return;
+      }
+      const res = await fetch(`${baseUrl}/usuarios/${email}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre: nuevoNombre }),
+      });
+      const data = await res.json();
+      mostrarResultado(data);
+    }
+
+    async function eliminarUsuario() {
+      const email = document.getElementById("emailEliminar").value.trim();
+      if (!email) {
+        alert("Email es obligatorio");
+        return;
+      }
+      const res = await fetch(`${baseUrl}/usuarios/${email}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      mostrarResultado(data);
+    }
+
+    async function obtenerCartelera() {
+      const res = await fetch(`${baseUrl}/funciones`);
+      const data = await res.json();
+      mostrarResultado(data);
+    }
+
+    function mostrarResultado(data) {
+      document.getElementById("resultado").textContent = JSON.stringify(data, null, 2);
+    }
+
+    // Mostrar la primera sección al cargar
+    mostrar('registro');
+  </script>
+</body>
+</html>
